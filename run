@@ -1,0 +1,56 @@
+#!/usr/bin/python3
+import datetime 
+import sys
+import os
+import rich
+
+code_folder = "ByteCode"
+command = None
+file = None
+argument = None
+
+try :
+    command = sys.argv[1]
+    file = sys.argv[2]
+    try:
+        argument = sys.argv[2:-1]
+    except IndexError:
+        pass
+except IndexError:
+    print("-help")
+    quit()
+
+
+if command == "-f" and len(file) != 0:
+    with open(file,"w") as f:
+        f.write("""fun main() {
+    // code here
+}""")
+
+elif command == "-c" and len(file) != 0:
+    current_time = datetime.datetime.now()
+    compiled_file = file.split(".")[0]
+    os.system(f"kotlinc {file} -include-runtime -d {code_folder}/{compiled_file}.jar")
+    end_time = datetime.datetime.now()
+    rich.print(f"\n \nrun Time is :: [bold green]{end_time-current_time}[/bold green]")
+    
+
+elif command == "-r" and len(file) != 0:
+    current_time = datetime.datetime.now()
+    file = file.split(".")[0]
+    os.system(f"java -jar {code_folder}/{file}.jar")
+    end_time = datetime.datetime.now()
+    rich.print(f"\n \nrun Time is :: [bold green]{end_time-current_time}[/bold green]")
+
+
+elif command == "-cr" and len(file) != 0:
+    compiled_file = file.split(".")[0]
+    current_time = datetime.datetime.now()
+    os.system(f"kotlinc {file} -include-runtime -d {code_folder}/{compiled_file}.jar")
+    file = file.split(".")[0]
+    os.system(f"java -jar {code_folder}/{file}.jar")
+    end_time = datetime.datetime.now()
+    rich.print(f"\n \n run Time is :: [bold green]{end_time-current_time}[/bold green]")
+
+else:
+    print("argumet is invalied")
